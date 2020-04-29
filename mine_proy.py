@@ -1,4 +1,4 @@
-from os import system as sys  # Operar en el terminal
+rom os import system as sys  # Operar en el terminal
 #import timeit                 # Medir velocidad del codigo
 from time import time as t    # Tiempo entre dos partes del codigo
 #from secrets import choice    # Generar numeros aleatorios
@@ -13,15 +13,15 @@ def mine_game(difficulty):
     if difficulty == '1':
         print('You have choosen EASY')
         size_table = 4
-        num_minas = 4
+        num_minas = int(size_table*size_table/3.5)
     if difficulty == '2':
         print('You have choosen MEDIUM')
-        size_table = 5
-        num_minas = 8
+        size_table = 6
+        num_minas = int(size_table*size_table/3.5)
     if difficulty == '3':
         print('You have choosen HARD')
-        size_table = 6
-        num_minas = 12
+        size_table = 8
+        num_minas = int(size_table*size_table/3.5)
     minas = 0
     table = []
     ans_table = []
@@ -45,10 +45,26 @@ def mine_game(difficulty):
         print(j)
     random.shuffle(table)
     max_turns = (size_table*size_table)-num_minas
+    player_decisions = set()
+    #player_decisions.add(['',''])
     for i in range(max_turns):
         hint = 0
-        row = int(input('Choose a row (0,1,2,...): '))
-        column = int(input('Choose a column (0,1,2,...): '))
+        switch = False
+        while switch == False:
+            row = int(input('Choose a row (0,1,2,...): '))
+            column = int(input('Choose a column (0,1,2,...): '))
+            actual_decision = f'{row},{column}'
+            try:
+                fail_switch = table[row][column]
+            except:
+                print('Dont choose a cell that does not exist.')
+                continue
+            if actual_decision in player_decisions:
+                print('You cant choose the same point twice!')
+                continue
+            else:
+                switch = True
+        player_decisions.add(actual_decision)
         if table[row][column] == 1:
             print('YOU LOOSE')
             break
