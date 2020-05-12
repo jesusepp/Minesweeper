@@ -7,20 +7,38 @@ import random                 # Generar pseudo random
 # cd /home/jesusp/python_pruebas
 sys('clear')
 
+def graphic(ans_table,tit_superior,mines_left):
+    sys('clear')
+    print()
+    print(' ',tit_superior)
+    print()
+    n = 0
+    for j in ans_table:
+        if n < 10:
+            print(f'{n} ',j)
+        else:
+            print(f'{n}',j)
+        n += 1
+    print('-----------------------------------------------------------------------')
+    print()
+    print(f'Mines Left: {mines_left}')
+    print()
+    print('-----------------------------------------------------------------------')
+
 def mine_game(difficulty):
     # Tipo de dificultad
     if difficulty == '1':
         print('You have choosen EASY')
         size_table = 6
-        num_minas = int(size_table*size_table/5)
+        num_minas = int(size_table*size_table/6)
     if difficulty == '2':
         print('You have choosen MEDIUM')
         size_table = 10
-        num_minas = int(size_table*size_table/4.5)
+        num_minas = int(size_table*size_table/5.5)
     if difficulty == '3':
         print('You have choosen HARD')
         size_table = 14
-        num_minas = int(size_table*size_table/4)
+        num_minas = int(size_table*size_table/5)
     # Definición de la leyenda superior del tablero
     tit_superior = []
     for i in range(size_table):
@@ -35,13 +53,7 @@ def mine_game(difficulty):
     # Generacion de los tableros de respuestas y de minas
     for i in range(size_table):
         for j in range(size_table):
-            if minas < num_minas:
-                actual_mine = int(random.choice(mine_type))
-                rows.append(actual_mine)
-                if actual_mine == 1:
-                    minas += 1
-            else:
-                rows.append(0)
+            rows.append(0)
             ans_unit.append('-')
         table.append(rows)
         ans_table.append(ans_unit)
@@ -50,27 +62,30 @@ def mine_game(difficulty):
     # Mostrar el tablero
     for j in ans_table:
         print(j)
-    # Mover las celdas para mejorar la aleatoriedad del sistema
-    random.shuffle(table)
+    # Crear las minas
     rows = []
-    for i in range(size_table):
-        for j in range(size_table):
-            rows.append(table[j][i])
-        table_extra.append(rows)
-        rows = []
-        random.shuffle(table_extra[i])
-    table = table_extra
+    while minas < num_minas:
+        r = random.randrange(0,size_table)
+        c = random.randrange(0,size_table)
+        if table[r][c] == 0:
+            table[r][c]=1
+            minas += 1
     max_turns = (size_table*size_table)-num_minas   # Definicion de la duracion del juego
     player_decisions = set()                        # Set de decisiones del usuario o casillas ya desbloqueadas
     auto_complete = set()                           # Set para autocompletar el tablero
     hint = 1                                        # Valor inicial para hint que sera el numero de minas que rodean una celda
+    inter = []
+    mark_column = ''
+    mines_left = int(num_minas)
     # Comienzo del juego
     for i in range(max_turns):
         # Si se puede autocompletar alguna celda
         if auto_complete != set() and hint != 0:
             actual_decision = auto_complete.pop()
-            row = int(actual_decision[0])
-            column = int(actual_decision[2])
+            inter=actual_decision.split(',')
+            row = int(inter[0])
+            column = int(inter[1])
+            print(row,column)
         # Si la celda actual es de cero y no hay que autocompletar otras celdas
         elif hint == 0:
             if row+1 < size_table and row > 0 and column > 0 and column+1 < size_table:
@@ -78,100 +93,54 @@ def mine_game(difficulty):
                     for k in range(3):
                         if f'{row-j+1},{column-k+1}' not in player_decisions:
                             auto_complete.add(f'{row-j+1},{column-k+1}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row+1 < size_table and row > 0 and column > 0:
                 for j in range(3):
                     for k in range(2):
                         if f'{row-j+1},{column-k}' not in player_decisions:
                             auto_complete.add(f'{row-j+1},{column-k}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row+1 < size_table and row > 0 and column+1 < size_table:
                 for j in range(3):
                     for k in range(2):
                         if f'{row-j+1},{column+k}' not in player_decisions:
                             auto_complete.add(f'{row-j+1},{column+k}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row+1 < size_table and column > 0 and column+1 < size_table:
                 for j in range(2):
                     for k in range(3):
                         if f'{row+j},{column-k+1}' not in player_decisions:
                             auto_complete.add(f'{row+j},{column-k+1}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row > 0 and column > 0 and column+1 < size_table:
                 for j in range(2):
                     for k in range(3):
                         if f'{row-j},{column-k+1}' not in player_decisions:
                             auto_complete.add(f'{row-j},{column-k+1}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row > 0 and column > 0:
                 for j in range(2):
                     for k in range(2):
                         if f'{row-j},{column-k}' not in player_decisions:
                             auto_complete.add(f'{row-j},{column-k}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row > 0 and column+1 < size_table:
                 for j in range(2):
                     for k in range(2):
                         if f'{row-j},{column+k}' not in player_decisions:
                             auto_complete.add(f'{row-j},{column+k}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row+1 < size_table and column > 0:
                 for j in range(2):
                     for k in range(2):
                         if f'{row+j},{column-k}' not in player_decisions:
                             auto_complete.add(f'{row+j},{column-k}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
             elif row+1 < size_table and column+1 < size_table:
                 for j in range(2):
                     for k in range(2):
                         if f'{row+j},{column+k}' not in player_decisions:
                             auto_complete.add(f'{row+j},{column+k}')
-                if auto_complete == set():
-                    True
-                else:
-                    actual_decision = auto_complete.pop()
-                    row = int(actual_decision[0])
-                    column = int(actual_decision[2])
+            if auto_complete == set():
+                True
+            else:
+                actual_decision = auto_complete.pop()
+                inter=actual_decision.split(',')
+                row = int(inter[0])
+                column = int(inter[1])
+                print(row,column)
         hint=0
         if auto_complete == set() and hint == 0:
             if i == 0:
@@ -198,10 +167,41 @@ def mine_game(difficulty):
                 switch = False
                 while switch == False:
                     try:
-                        row = int(input('Choose a row (0,1,2,...): '))
-                        column = int(input('Choose a column (0,1,2,...): '))
+                        mark_row = input('Choose a row (0,1,2,...), p for marking, d for de-marking: ')
+                        if mark_row.lower() != 'p' and mark_row.lower() != 'd':
+                            mark_column = input('Choose a column (0,1,2,...), p for marking, d for de-marking: ')
+                        if mark_row.lower() == 'p' or mark_column.lower() == 'p':
+                            print('You are marking a cell')
+                            marked_row = int(input('Choose a row to mark (0,1,2,...): '))
+                            marked_column = int(input('Choose a column to mark (0,1,2,...): '))
+                            if ans_table[marked_row][marked_column] == '-':
+                                ans_table[marked_row][marked_column] = 'P'
+                                mines_left -= 1
+                            else:
+                                print('You can\'t mark a cell that\'s already unlocked')
+                                continue
+                            graphic(ans_table,tit_superior,mines_left)
+                            continue
+                        elif mark_row.lower() == 'd' or mark_column.lower() == 'd':
+                            print('You are de-marking a cell')
+                            marked_row = int(input('Choose a row to de-mark (0,1,2,...): '))
+                            marked_column = int(input('Choose a column to de-mark (0,1,2,...): '))
+                            if ans_table[marked_row][marked_column] == 'P':
+                                ans_table[marked_row][marked_column] = '-'
+                                mines_left += 1
+                            else:
+                                print('You can\'t de-mark a cell that\'s not marked or it\'s not unlocked')
+                                continue
+                            graphic(ans_table,tit_superior,mines_left)
+                            continue
+                        else:
+                            row = int(mark_row)
+                            column = int(mark_column)
                     except ValueError:
                         print('You can\'t choose letters or symbols')
+                        continue
+                    except IndexError:
+                        print('That cell doesn\'t exist')
                         continue
                     actual_decision = f'{row},{column}'
                     try:
@@ -227,63 +227,48 @@ def mine_game(difficulty):
                     for k in range(3):
                         if table[row+j-1][column+k-1] == 1:
                             hint += table[row+j-1][column+k-1]
-                ans_table[row][column] = f'{hint}'
             elif row+1 < size_table and row > 0 and column > 0:
                 for j in range(3):
                     for k in range(2):
                         if table[row+j-1][column-k] == 1:
                             hint += table[row+j-1][column-k]                
-                ans_table[row][column] = f'{hint}'
             elif row+1 < size_table and row > 0 and column+1 < size_table:
                 for j in range(3):
                     for k in range(2):
                         if table[row+j-1][column+k] == 1:
                             hint += table[row+j-1][column+k]
-                ans_table[row][column] = f'{hint}'
             elif row+1 < size_table and column > 0 and column+1 < size_table:
                 for j in range(2):
                     for k in range(3):
                         if table[row+j][column+k-1] == 1:
                             hint += table[row+j][column+k-1]
-                ans_table[row][column] = f'{hint}'
             elif row > 0 and column > 0 and column+1 < size_table:
                 for j in range(2):
                     for k in range(3):
                         if table[row-j][column+k-1] == 1:
                             hint += table[row-j][column+k-1]
-                ans_table[row][column] = f'{hint}'
             elif row > 0 and column > 0:
                 for j in range(2):
                     for k in range(2):
                         if table[row-j][column-k] == 1:
                             hint += table[row-j][column-k]
-                ans_table[row][column] = f'{hint}'
             elif row > 0 and column+1 < size_table:
                 for j in range(2):
                     for k in range(2):
                         if table[row-j][column+k] == 1:
                             hint += table[row-j][column+k]
-                ans_table[row][column] = f'{hint}'
             elif row+1 < size_table and column > 0:
                 for j in range(2):
                     for k in range(2):
                         if table[row+j][column-k] == 1:
                             hint += table[row+j][column-k]
-                ans_table[row][column] = f'{hint}'
             elif row+1 < size_table and column+1 < size_table:
                 for j in range(2):
                     for k in range(2):
                         if table[row+j][column+k] == 1:
                             hint += table[row+j][column+k]
-                ans_table[row][column] = f'{hint}'
-            print()
-            print(' ',tit_superior)
-            print()
-            n = 0
-            for j in ans_table:
-                print(f'{n}',j)
-                n += 1
-            print('-----------------------------------------------------------------------')
+            ans_table[row][column] = f'{hint}'
+            graphic(ans_table,tit_superior,mines_left)
     # Si sales del for, ganaste (solo si no tocaste una mina)
     if table[row][column] != 1:
         print('Congratulations, you have won.')
