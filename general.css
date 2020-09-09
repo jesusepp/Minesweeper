@@ -1,0 +1,26 @@
+body{
+    margin: 0;
+}
+
+.tableBut{
+    text-align: center;
+    cursor: pointer;
+    border: black .25px solid;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    background-color: #dbd4d4;
+    border-radius: 3px;
+    font-weight: 900;
+}
+
+.tableBut:active{
+    background-color: #a7a1a1;
+}
+
+#tablePos{
+    padding: 5px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
