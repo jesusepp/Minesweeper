@@ -5,16 +5,16 @@ class Game {
     }
     boardCreation(){
         if (this.diff == 0){
-            this.Xdim = 8;
-            this.Ydim = 6;
-            this.diffMult = 6;
-        } else if (this.diff == 1){
             this.Xdim = 10;
             this.Ydim = 8;
+            this.diffMult = 6;
+        } else if (this.diff == 1){
+            this.Xdim = 12;
+            this.Ydim = 10;
             this.diffMult = 5.5;
         } else if (this.diff == 2){
-            this.Xdim = 15;
-            this.Ydim = 12;
+            this.Xdim = 20;
+            this.Ydim = 15;
             this.diffMult = 10;
         }
         this.mineGen();
@@ -55,13 +55,14 @@ class Game {
         }
     }
     reset(){
-        $('#tablePos').css('border','black 2px dashed');
+        $('#tablePos').css('border','white 2px dashed');
         $('#difficulty').show();
         $('.tableBut').unbind();
         $('.tableBut').css('cursor', 'default');
         $('.tableBut').on('mousedown', function(){
             $(this).css('background-color', '#dbd4d4');
         });
+        $('#btm').hide();
     }
     printTable(){
         let table = '<table>';
@@ -76,10 +77,7 @@ class Game {
             table += '</tr>';
         }
         table += '</table>';
-        let width = $(window).width();
         $('#tablePos').html(table);
-        $('.tableBut').width('' + width/this.Xdim + '');
-        $('.tableBut').height('' + $('.tableBut').width() + '');
         $('.tableBut').mousedown(function(event){
             let lastPos = $(this).html();
             let n = lastPos.search("AA");
@@ -251,6 +249,7 @@ for (let i = 0; i < a.length; i++){
         game.boardCreation();
     })
 };
+$('body').height($(window).height());
 $('#btm').click(function(){
     $('#difficulty').show();
     $('#btm').hide();
