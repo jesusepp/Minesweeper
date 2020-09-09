@@ -7,15 +7,15 @@ class Game {
         if (this.diff == 0){
             this.Xdim = 10;
             this.Ydim = 8;
-            this.diffMult = 6;
+            this.diffMult = 5;
         } else if (this.diff == 1){
             this.Xdim = 12;
             this.Ydim = 10;
-            this.diffMult = 5.5;
+            this.diffMult = 5;
         } else if (this.diff == 2){
             this.Xdim = 20;
             this.Ydim = 15;
-            this.diffMult = 5;
+            this.diffMult = 4.5;
         }
         this.mineGen();
         this.numGen();
@@ -99,7 +99,6 @@ class Game {
     check(lastPos){
         let id = '#S' + lastPos[0] + '-' + lastPos[1];
         if ($(id).html() == ''){
-            console.log(id);
             $(id).html('P');
             id = '#' + lastPos[0] + '-' + lastPos[1];
             $(id).css('background-color', 'blue');
