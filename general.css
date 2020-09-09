@@ -7,7 +7,6 @@ body{
     cursor: pointer;
     border: black .25px solid;
     overflow: hidden;
-    width: 50px;
     height: 50px;
     background-color: #dbd4d4;
     border-radius: 3px;

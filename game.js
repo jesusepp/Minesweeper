@@ -15,7 +15,7 @@ class Game {
         } else if (this.diff == 2){
             this.Xdim = 15;
             this.Ydim = 12;
-            this.diffMult = 5;
+            this.diffMult = 10;
         }
         this.mineGen();
         this.numGen();
@@ -23,9 +23,9 @@ class Game {
     }
     currentPlay(lastPos){
         this.lastPos = lastPos;
+        let id = '#' + this.lastPos[0] + '-' + this.lastPos[1];
         if (this.mineField[parseInt(this.lastPos[0])][parseInt(this.lastPos[1])] == 1){
             $('#tablePos').prepend('You hit a mine. You loose.');
-            let id = '#' + this.lastPos[0] + this.lastPos[1];
             $(id).css('background-color', 'red');
             $(id).css('color', 'black');
             this.reset();
@@ -37,7 +37,6 @@ class Game {
             });
         } else {
             this.numberMoves = this.numberMoves + 1;
-            let id = '#' + this.lastPos[0] + this.lastPos[1];
             $(id).css('background-color', '#dbd4d4');
             $(id).css('cursor', 'default');
             $(id).css('color', 'black');
@@ -69,15 +68,18 @@ class Game {
         for (let j = 0; j < this.Ydim; j++){
             table += '<tr>';
             for (let i = 0; i < this.Xdim; i++){
-                table += '<td class=\'tableBut\' id=\'' + j + '' + i + 
+                table += '<td class=\'tableBut\' id=\'' + j + '-' + i + 
                 '\'><span style=\'display: none;\'>AA' +
-                 j + ',' + i + 'BB</span><span id=\'S' + j + '' + i + 
+                 j + ',' + i + 'BB</span><span id=\'S' + j + '-' + i + 
                  '\'></span></td>';
             }
             table += '</tr>';
         }
         table += '</table>';
+        let width = $(window).width();
         $('#tablePos').html(table);
+        $('.tableBut').width('' + width/this.Xdim + '');
+        $('.tableBut').height('' + $('.tableBut').width() + '');
         $('.tableBut').mousedown(function(event){
             let lastPos = $(this).html();
             let n = lastPos.search("AA");
@@ -97,15 +99,16 @@ class Game {
         })
     }
     check(lastPos){
-        let id = '#S' + lastPos[0] + '' + lastPos[1];
+        let id = '#S' + lastPos[0] + '-' + lastPos[1];
         if ($(id).html() == ''){
+            console.log(id);
             $(id).html('P');
-            id = '#' + lastPos[0] + '' + lastPos[1];
+            id = '#' + lastPos[0] + '-' + lastPos[1];
             $(id).css('background-color', 'blue');
             $(id).css('color', 'white');
         } else {
             $(id).html('');
-            id = '#' + lastPos[0] + '' + lastPos[1];
+            id = '#' + lastPos[0] + '-' + lastPos[1];
             $(id).css('background-color', '#dbd4d4');
             $(id).css('color', 'black');
         }
@@ -194,7 +197,7 @@ class Game {
         for (let j = Jmin; j < Jmax; j++){
             for (let i = Imin; i < Imax; i++){
                 if (j != 0 || i != 0){
-                    id = '#' + (row + j) + '' + (column + i);
+                    id = '#' + (row + j) + '-' + (column + i);
                     if (this.numTable[row + j][column + i] == 0 && $(id).html() != '0'){
                         $(id).unbind();
                         $(id).html(this.numTable[parseInt(row)][parseInt(column)]);
@@ -202,6 +205,7 @@ class Game {
                         $(id).css('background-color', '#dbd4d4');
                         $(id).css('cursor', 'default');
                         $(id).css('color', 'black');
+                        console.log([row + j,column + i]);
                         this.autofill([row + j,column + i]);
                     } else if (this.mineField[row + j][column + i] == 0){
                         if ($(id).html() == '0'){
@@ -211,6 +215,7 @@ class Game {
                             $(id).css('background-color', '#dbd4d4');
                             $(id).css('cursor', 'default');
                             $(id).css('color', 'black');
+                            console.log([row + j,column + i]);
                             $(id).html(this.numTable[parseInt(row + j)][parseInt(column + i)]);
                             this.numberMoves = this.numberMoves + 1;
                             continue;
@@ -235,11 +240,19 @@ var game;
 $('#tablePos').bind("contextmenu",function(e){
     return false;
 });
+$('#btm').hide();
 for (let i = 0; i < a.length; i++){
     $('.difInd').eq(i).click(function(){
         $('#tablePos').css('border','none');
+        $('#tablePos').show();
         game = new Game(i);
         $('#difficulty').hide();
+        $('#btm').show();
         game.boardCreation();
     })
-}
+};
+$('#btm').click(function(){
+    $('#difficulty').show();
+    $('#btm').hide();
+    $('#tablePos').hide();
+});
