@@ -78,6 +78,7 @@ class Game {
         }
         table += '</table>';
         $('#tablePos').html(table);
+        // $('.tableBut').width($(window).width()/(this.Xdim));
         $('.tableBut').mousedown(function(event){
             let lastPos = $(this).html();
             let n = lastPos.search("AA");
