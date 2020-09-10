@@ -41,7 +41,7 @@ button{
     border: black .5px solid;
     overflow: hidden;
     height: 25px;
-    width: 25px;
+    width: 50px;
     background-color: #EEF1EF;
     border-radius: 3px;
     font-weight: 900;
@@ -52,7 +52,7 @@ button{
 }
 
 #tablePos{
-    padding: 5px;
+    margin: 50px 0;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);

@@ -4,17 +4,25 @@ class Game {
         this.status = false;
     }
     boardCreation(){
+        let a, b;
+        if ($(window).width() > 600){
+            a = 10;
+            b = 8;
+        } else {
+            b = 10;
+            a = 8;
+        }
         if (this.diff == 0){
-            this.Xdim = 10;
-            this.Ydim = 8;
+            this.Xdim = a;
+            this.Ydim = b;
             this.diffMult = 5;
         } else if (this.diff == 1){
-            this.Xdim = 12;
-            this.Ydim = 10;
+            this.Xdim = a+2;
+            this.Ydim = b+2;
             this.diffMult = 5;
         } else if (this.diff == 2){
-            this.Xdim = 20;
-            this.Ydim = 15;
+            this.Xdim = a*2;
+            this.Ydim = b*2;
             this.diffMult = 4.5;
         }
         this.mineGen();
